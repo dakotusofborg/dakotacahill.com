@@ -94,7 +94,7 @@ export const cv = {
       name: 'Custom MCP integration suite',
       stack: 'TypeScript · Model Context Protocol · REST APIs',
       points: [
-        'Built a suite of MCP servers giving Claude Code live access to PSA, RMM, documentation, identity, security, and network platforms (Autotask, NinjaOne, IT Glue, Microsoft Graph, AWS, Cloudflare, UniFi, and more)',
+        'Built 10+ custom MCP servers giving Claude Code live access to PSA, RMM, documentation, identity, security, and network platforms (Autotask, NinjaOne, IT Glue, Microsoft Graph, AWS, Cloudflare, UniFi, and more)',
         'Reverse-engineered undocumented private APIs where no official API existed, including session-based auth and 2FA-gated logins',
         'Designed write-safety guardrails for production systems: per-account write opt-in, dry-run modes, and confirm-by-ID on every mutation',
       ],

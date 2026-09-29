@@ -4,7 +4,7 @@ import { cv } from '@/data/cv';
 import { site } from '@/data/site';
 import { getGames, statusLabel } from '@/lib/content';
 
-const games = await getGames();
+const games = (await getGames()).filter((g) => g.data.showOnCV);
 const pretty = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
 const contact = [
   site.email && { label: site.email, href: `mailto:${site.email}` },

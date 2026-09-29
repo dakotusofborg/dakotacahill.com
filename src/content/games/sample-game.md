@@ -8,6 +8,7 @@ description: Third-person action prototype in Unreal Engine 5 and C++, featuring
 status: prototype # released | in-development | prototype | game-jam
 releaseDate: 2026-09-01
 featured: true
+showOnCV: false # sample content: never list on the real CV
 order: 1
 
 engine: Unreal Engine
