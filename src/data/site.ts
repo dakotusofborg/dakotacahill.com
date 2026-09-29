@@ -4,15 +4,15 @@ export const site = {
   name: 'Dakota Cahill',
   handle: 'dakotacahill',
   title: 'Game Developer',
-  class: 'Gameplay Programmer', // shown on the "character sheet"
+  class: 'Systems Engineer → Game Dev', // shown on the "character sheet"
   tagline: 'C++ and Unreal Engine. Building games and the tools that make them.',
   description:
-    'Portfolio of Dakota Cahill, a C++ / Unreal Engine game developer. Playable builds, source code, devlogs, and CV.',
-  email: '',
+    'Portfolio of Dakota Cahill, a C++ / Unreal Engine game developer and systems engineer. Playable builds, source code, devlogs, and CV.',
+  email: 'dakota.cahill@protonmail.com',
   links: {
-    github: '',
+    github: 'https://github.com/dakotusofborg',
     itch: '',
-    linkedin: '',
+    linkedin: 'https://www.linkedin.com/in/dakotajcahill/',
     youtube: '',
   },
 };

@@ -5,7 +5,12 @@ import { site } from '@/data/site';
 import { getGames, statusLabel } from '@/lib/content';
 
 const games = await getGames();
-const contact = [site.email, site.links.github, site.links.linkedin].filter(Boolean);
+const pretty = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+const contact = [
+  site.email && { label: site.email, href: `mailto:${site.email}` },
+  site.links.linkedin && { label: pretty(site.links.linkedin), href: site.links.linkedin },
+  site.links.github && { label: pretty(site.links.github), href: site.links.github },
+].filter((c): c is { label: string; href: string } => Boolean(c));
 ---
 
 <Base title="CV" description={`CV of ${site.name}, ${site.title}.`}>
@@ -15,8 +20,18 @@ const contact = [site.email, site.links.github, site.links.linkedin].filter(Bool
         <div>
           <p class="hud-label no-print">Stats screen</p>
           <h1>{site.name}</h1>
-          <p class="role">{site.title} · {site.class}</p>
-          {contact.length > 0 && <p class="muted contact">{contact.join('  ·  ')}</p>}
+          <p class="role">{cv.headline}</p>
+          <p class="muted contact">
+            <span>{cv.location}</span>
+            {
+              contact.map((c) => (
+                <>
+                  {' · '}
+                  <a href={c.href}>{c.label}</a>
+                </>
+              ))
+            }
+          </p>
         </div>
         <button class="btn no-print" type="button" onclick="window.print()">Save as PDF</button>
       </header>
@@ -25,6 +40,29 @@ const contact = [site.email, site.links.github, site.links.linkedin].filter(Bool
 
       <div class="cols">
         <div>
+          {
+            games.length > 0 && (
+              <>
+                <h2>Game projects</h2>
+                {games.map((g) => (
+                  <div class="entry">
+                    <div class="entry-head">
+                      <h3>
+                        <a href={`/games/${g.id}/`}>{g.data.title}</a>
+                      </h3>
+                      <span class="period">{statusLabel[g.data.status]}</span>
+                    </div>
+                    <p class="org muted">
+                      {g.data.role} · {g.data.engine} {g.data.engineVersion} ·{' '}
+                      {g.data.teamSize === 1 ? 'Solo' : `Team of ${g.data.teamSize}`}
+                    </p>
+                    <p>{g.data.description}</p>
+                  </div>
+                ))}
+              </>
+            )
+          }
+
           <h2>Experience</h2>
           {
             cv.experience.map((job) => (
@@ -33,7 +71,9 @@ const contact = [site.email, site.links.github, site.links.linkedin].filter(Bool
                   <h3>{job.role}</h3>
                   <span class="period">{job.period}</span>
                 </div>
-                <p class="org muted">{job.org}</p>
+                <p class="org muted">
+                  {job.org} · {job.location}
+                </p>
                 <ul>
                   {job.points.map((p) => (
                     <li>{p}</li>
@@ -43,20 +83,31 @@ const contact = [site.email, site.links.github, site.links.linkedin].filter(Bool
             ))
           }
 
-          <h2>Game projects</h2>
+          <h3 class="sub">Earlier roles</h3>
+          <ul class="earlier">
+            {
+              cv.earlier.map((e) => (
+                <li>
+                  <span>
+                    <strong>{e.role}</strong>, {e.org}
+                  </span>
+                  <span class="period">{e.period}</span>
+                </li>
+              ))
+            }
+          </ul>
+
+          <h2>Tools &amp; builds</h2>
           {
-            games.map((g) => (
+            cv.builds.map((b) => (
               <div class="entry">
-                <div class="entry-head">
-                  <h3>
-                    <a href={`/games/${g.id}/`}>{g.data.title}</a>
-                  </h3>
-                  <span class="period">{statusLabel[g.data.status]}</span>
-                </div>
-                <p class="org muted">
-                  {g.data.role} · {g.data.engine} {g.data.engineVersion} ·{g.data.teamSize === 1 ? 'Solo' : `Team of ${g.data.teamSize}`}
-                </p>
-                <p>{g.data.description}</p>
+                <h3>{b.name}</h3>
+                <p class="org muted">{b.stack}</p>
+                <ul>
+                  {b.points.map((p) => (
+                    <li>{p}</li>
+                  ))}
+                </ul>
               </div>
             ))
           }
@@ -85,6 +136,16 @@ const contact = [site.email, site.links.github, site.links.linkedin].filter(Bool
                 <p class="org muted">
                   {e.org} · {e.period}
                 </p>
+              </div>
+            ))
+          }
+
+          <h2>Certifications</h2>
+          {
+            cv.certifications.map((c) => (
+              <div class="entry">
+                <h3>{c.title}</h3>
+                <p class="org muted">{c.period}</p>
               </div>
             ))
           }
@@ -164,6 +225,26 @@ const contact = [site.email, site.links.github, site.links.linkedin].filter(Bool
     margin: 0;
     padding-left: 1.2rem;
   }
+  .sub {
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin: 1.5rem 0 0.6rem;
+  }
+  .earlier {
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    font-size: 0.95rem;
+  }
+  .earlier li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.3rem 0;
+    border-bottom: 1px dashed var(--line);
+  }
   .skill {
     margin-bottom: 1rem;
   }
@@ -176,10 +257,76 @@ const contact = [site.email, site.links.github, site.links.linkedin].filter(Bool
     }
   }
 
-  /* Clean, ink-friendly one-pager when saved as PDF */
+  /* Clean, ink-friendly resume when saved as PDF */
+  @page {
+    margin: 0.5in;
+  }
   @media print {
-    .section {
+    /* rem-based spacing scales down with the root size */
+    :global(html) {
+      font-size: 9.5pt;
+    }
+    :global(body) {
+      font-size: 9.5pt;
+      line-height: 1.4;
+    }
+    .section,
+    .wrap {
       padding: 0;
+      max-width: none;
+    }
+    h1 {
+      font-size: 22pt;
+      margin-bottom: 0.1em;
+    }
+    .role {
+      font-size: 11pt;
+    }
+    .head {
+      padding-bottom: 0.6rem;
+    }
+    .summary {
+      font-size: 10pt;
+      max-width: none;
+      margin-block: 0.8rem;
+    }
+    h2 {
+      font-size: 9.5pt;
+      margin-top: 0.9rem;
+      margin-bottom: 0.4rem;
+      break-after: avoid;
+    }
+    .sub {
+      font-size: 9pt;
+      margin-top: 0.6rem;
+      break-after: avoid;
+    }
+    .entry {
+      margin-bottom: 0.6rem;
+    }
+    .entry h3 {
+      font-size: 10pt;
+    }
+    .org,
+    .period,
+    .contact {
+      font-size: 8.5pt;
+    }
+    .entry ul {
+      padding-left: 1rem;
+    }
+    .earlier {
+      font-size: 9pt;
+      margin-bottom: 0.6rem;
+    }
+    .earlier li {
+      padding: 0.1rem 0;
+    }
+    .tags li {
+      font-size: 7.5pt;
+    }
+    .skill {
+      margin-bottom: 0.5rem;
     }
     h1,
     h2,
@@ -195,8 +342,13 @@ const contact = [site.email, site.links.github, site.links.linkedin].filter(Bool
       color: #444;
     }
     h2,
-    .head {
+    .head,
+    .earlier li {
       border-color: #bbb;
+    }
+    .sub,
+    .contact a {
+      color: #000;
     }
     .tags li {
       background: none;
@@ -210,8 +362,8 @@ const contact = [site.email, site.links.github, site.links.linkedin].filter(Bool
       content: none;
     }
     .cols {
-      grid-template-columns: 1.7fr 1fr;
-      gap: 2rem;
+      grid-template-columns: 2.4fr 1fr;
+      gap: 1.5rem;
     }
   }
 </style>
