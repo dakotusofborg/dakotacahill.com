@@ -37,6 +37,8 @@ Domain placeholder: `https://dakotacahill.com` (set in `astro.config.mjs`).
 3. Publish the packaged build as a GitHub Release, then set `download.url`, `version`, `sizeMB`
 4. `npm run build` to validate
 
-## Deploy (planned)
+## Deploy
 
-Cloudflare Pages: build command `npm run build`, output `dist`. Point the domain at it once registered.
+Cloudflare Workers with static assets, on the owner's personal Cloudflare account. This is not Pages, which Cloudflare now labels legacy.
+Config is in `wrangler.jsonc` (serves `dist/`; unknown URLs get `404.html`). Workers Builds deploys automatically on every
+push to `main`: build `npm run build`, deploy `npx wrangler deploy`. Domain: dakotacahill.com.
