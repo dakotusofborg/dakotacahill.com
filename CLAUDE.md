@@ -40,5 +40,6 @@ Domain placeholder: `https://dakotacahill.com` (set in `astro.config.mjs`).
 ## Deploy
 
 Cloudflare Workers with static assets, on the owner's personal Cloudflare account. This is not Pages, which Cloudflare now labels legacy.
-Config is in `wrangler.jsonc` (serves `dist/`; unknown URLs get `404.html`). Workers Builds deploys automatically on every
-push to `main`: build `npm run build`, deploy `npx wrangler deploy`. Domain: dakotacahill.com.
+Config is in `wrangler.jsonc` (serves `dist/`; unknown URLs get `404.html`; attaches dakotacahill.com + www as custom domains).
+Deploys are currently **manual**: `npm run build && npx wrangler deploy`. Run `npx wrangler whoami` first and confirm the
+personal account. Pushing to `main` does not deploy yet.
