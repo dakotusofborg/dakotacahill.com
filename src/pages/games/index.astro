@@ -1,0 +1,30 @@
+---
+import Base from '@/layouts/Base.astro';
+import GameCard from '@/components/GameCard.astro';
+import { getGames } from '@/lib/content';
+
+const games = await getGames();
+---
+
+<Base title="Games" description="Playable Unreal Engine games by Dakota Cahill, with downloads and source code.">
+  <section class="section">
+    <div class="wrap">
+      <p class="hud-label">Select a game</p>
+      <h1>Games</h1>
+      <p class="muted intro">
+        Every project here is C++ in Unreal Engine. Each page has a playable Windows build, the source on GitHub, and
+        the devlog posts written along the way.
+      </p>
+      <div class="grid">
+        {games.map((game, i) => <GameCard game={game} index={i} />)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    max-width: 60ch;
+    margin-bottom: 2.5rem;
+  }
+</style>

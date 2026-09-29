@@ -1,0 +1,40 @@
+---
+import Base from '@/layouts/Base.astro';
+import PostList from '@/components/PostList.astro';
+import { getPosts } from '@/lib/content';
+
+const posts = await getPosts();
+const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort();
+---
+
+<Base title="Devlog" description="Devlogs, Unreal Engine C++ notes, and Claude Code / MCP workflow posts.">
+  <section class="section">
+    <div class="wrap">
+      <p class="hud-label">Mission log</p>
+      <h1>Devlog</h1>
+      <p class="muted intro">
+        Build notes, C++ and Unreal deep-dives, and posts on AI-assisted development. Posts tied to a game also show up on
+        that game's page. <a href="/rss.xml">Subscribe via RSS</a>.
+      </p>
+      {
+        tags.length > 0 && (
+          <ul class="tags tag-row">
+            {tags.map((t) => (
+              <li>#{t}</li>
+            ))}
+          </ul>
+        )
+      }
+      <PostList posts={posts} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    max-width: 62ch;
+  }
+  .tag-row {
+    margin: 1.5rem 0 2rem;
+  }
+</style>

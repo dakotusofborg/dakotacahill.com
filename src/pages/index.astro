@@ -1,0 +1,156 @@
+---
+import Base from '@/layouts/Base.astro';
+import GameCard from '@/components/GameCard.astro';
+import PostList from '@/components/PostList.astro';
+import { getGames, getPosts } from '@/lib/content';
+import { site } from '@/data/site';
+
+const games = await getGames();
+const featured = games.filter((g) => g.data.featured);
+const shown = (featured.length ? featured : games).slice(0, 3);
+const posts = (await getPosts()).slice(0, 3);
+---
+
+<Base>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="hud-label">Player 1</p>
+        <h1>{site.name}</h1>
+        <p class="lede">{site.tagline}</p>
+        <div class="cta">
+          <a class="btn" href="/games/">▶ Play my games</a>
+          <a class="btn btn-ghost" href="/cv/">View CV</a>
+        </div>
+        <p class="press muted"><span class="blink">_</span> Press start</p>
+      </div>
+
+      <div class="panel sheet" aria-label="Character sheet">
+        <p class="hud-label">Character sheet</p>
+        <dl class="stats">
+          <dt>Class</dt>
+          <dd>{site.class}</dd>
+          <dt>Engine</dt>
+          <dd>Unreal Engine 5</dd>
+          <dt>Language</dt>
+          <dd>C++</dd>
+          <dt>Tooling</dt>
+          <dd>Claude Code · MCP</dd>
+          <dt>Games</dt>
+          <dd>{games.length}</dd>
+        </dl>
+        <div class="xp" aria-hidden="true">
+          <span>LVL</span>
+          <div class="bar"><div class="fill"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="hud-label">01 · Select a game</p>
+          <h2>Games</h2>
+        </div>
+        <a href="/games/">All games →</a>
+      </div>
+      <div class="grid">
+        {shown.map((game, i) => <GameCard game={game} index={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two-col">
+      <div>
+        <p class="hud-label">02 · Devlog</p>
+        <h2>Latest posts</h2>
+        <PostList posts={posts} />
+        <p><a href="/blog/">All posts →</a></p>
+      </div>
+      <div class="panel">
+        <p class="hud-label">03 · Workflow</p>
+        <h2>Claude Code + MCP</h2>
+        <p class="muted">
+          How I use AI-assisted C++ development and custom MCP connectors to build Unreal Engine projects faster: the
+          setup, the tools, and what works.
+        </p>
+        <a class="btn btn-ghost" href="/workflow/">See the workflow</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: clamp(3rem, 10vw, 7rem) clamp(2rem, 6vw, 4rem);
+    border-bottom: 1px solid var(--line);
+    background: radial-gradient(ellipse at 20% 0%, var(--accent-glow), transparent 60%);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+  .lede {
+    font-size: 1.25rem;
+    color: var(--text-dim);
+    max-width: 40ch;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+  .press {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 2rem;
+  }
+  .xp {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-faint);
+  }
+  .xp .bar {
+    flex: 1;
+    height: 8px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+  }
+  .xp .fill {
+    height: 100%;
+    width: 68%;
+    background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+  .section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .hero-grid,
+    .two-col {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

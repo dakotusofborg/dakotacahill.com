@@ -1,0 +1,91 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import { getEntry, render } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import { formatDate, getPosts, type Post } from '@/lib/content';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}) satisfies GetStaticPaths;
+
+const { post } = Astro.props as { post: Post };
+const d = post.data;
+const { Content } = await render(post);
+const game = d.game ? await getEntry(d.game) : undefined;
+---
+
+<Base title={d.title} description={d.description} image={d.cover ?? game?.data.cover} type="article">
+  <article class="section">
+    <div class="wrap">
+      <header class="head">
+        <p class="hud-label">
+          <a href="/blog/">Devlog</a>
+          {game && <> / <a href={`/games/${game.id}/`}>{game.data.title}</a></>}
+        </p>
+        <h1 class="title">{d.title}</h1>
+        <p class="meta muted">
+          <time datetime={d.pubDate.toISOString()}>{formatDate(d.pubDate)}</time>
+          {d.updatedDate && <> · updated {formatDate(d.updatedDate)}</>}
+        </p>
+        {
+          d.tags.length > 0 && (
+            <ul class="tags">
+              {d.tags.map((t) => (
+                <li>#{t}</li>
+              ))}
+            </ul>
+          )
+        }
+      </header>
+
+      {d.cover && <Image src={d.cover} alt="" width={1200} class="cover bracket" />}
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      {
+        game && (
+          <aside class="panel back">
+            <p class="hud-label">From the devlog of</p>
+            <h3>{game.data.title}</h3>
+            <p class="muted">{game.data.tagline}</p>
+            <a class="btn btn-ghost" href={`/games/${game.id}/`}>
+              View game
+            </a>
+          </aside>
+        )
+      }
+    </div>
+  </article>
+</Base>
+
+<style>
+  .head {
+    max-width: 72ch;
+    margin-bottom: 2rem;
+  }
+  .head .hud-label a {
+    color: inherit;
+  }
+  .title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    text-transform: none;
+  }
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .cover {
+    width: 100%;
+    max-width: 72ch;
+    margin-bottom: 2rem;
+    border: 1px solid var(--line);
+  }
+  .back {
+    max-width: 72ch;
+    margin-top: 3rem;
+  }
+</style>

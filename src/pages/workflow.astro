@@ -1,0 +1,106 @@
+---
+import Base from '@/layouts/Base.astro';
+import PostList from '@/components/PostList.astro';
+import { getPosts } from '@/lib/content';
+
+// Any post tagged "workflow" is listed at the bottom of this page.
+const posts = (await getPosts()).filter((p) => p.data.tags.includes('workflow'));
+
+// Placeholder copy. Replace with your real setup.
+const loadout = [
+  {
+    name: 'Claude Code',
+    kind: 'Primary tool',
+    body: 'Pair-programming on Unreal C++: gameplay systems, refactors, build errors, and engine source spelunking.',
+  },
+  {
+    name: 'MCP connectors',
+    kind: 'Integrations',
+    body: 'Custom Model Context Protocol servers that give the agent access to the tools I use every day.',
+  },
+  {
+    name: 'Unreal Engine 5',
+    kind: 'Engine',
+    body: 'C++-first projects, with Blueprints kept for designer-facing tuning.',
+  },
+  {
+    name: 'Git + GitHub',
+    kind: 'Source control',
+    body: 'Source on GitHub. Packaged builds published as GitHub Releases.',
+  },
+];
+---
+
+<Base
+  title="Workflow"
+  description="How Dakota Cahill builds Unreal Engine C++ games with Claude Code and custom MCP connectors."
+>
+  <section class="section">
+    <div class="wrap">
+      <p class="hud-label">Equipment</p>
+      <h1>Workflow</h1>
+      <p class="muted intro">
+        How I build games: a C++ / Unreal Engine pipeline with Claude Code and custom MCP connectors. This page covers
+        the loadout. The devlog posts below go deeper.
+      </p>
+
+      <div class="grid loadout">
+        {
+          loadout.map((item) => (
+            <div class="panel">
+              <p class="hud-label">{item.kind}</p>
+              <h3>{item.name}</h3>
+              <p class="muted">{item.body}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="panel loop">
+        <p class="hud-label">Core loop</p>
+        <ol>
+          <li><strong>Design:</strong> write the feature spec in plain language.</li>
+          <li><strong>Build:</strong> implement the C++ with Claude Code, using MCP for project context.</li>
+          <li><strong>Playtest:</strong> run it in-editor, iterate, profile.</li>
+          <li><strong>Ship:</strong> package, publish a GitHub Release, write the devlog.</li>
+        </ol>
+      </div>
+
+      {
+        posts.length > 0 && (
+          <section class="section">
+            <p class="hud-label">Workflow posts</p>
+            <PostList posts={posts} />
+          </section>
+        )
+      }
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    max-width: 62ch;
+    margin-bottom: 2.5rem;
+  }
+  .loadout h3 {
+    margin-bottom: 0.3em;
+  }
+  .loadout p:last-child {
+    margin: 0;
+  }
+  .loop {
+    margin-top: 2rem;
+  }
+  .loop ol {
+    margin: 0;
+    padding-left: 1.3rem;
+  }
+  .loop li {
+    margin-bottom: 0.4rem;
+  }
+  .loop li::marker {
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+</style>

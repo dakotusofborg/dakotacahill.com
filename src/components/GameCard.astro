@@ -1,0 +1,105 @@
+---
+import { Image } from 'astro:assets';
+import { statusLabel, type Game } from '@/lib/content';
+
+interface Props {
+  game: Game;
+  index?: number;
+}
+
+const { game, index } = Astro.props;
+const { title, tagline, cover, status, engine, engineVersion, genres } = game.data;
+---
+
+<article class="card panel">
+  <a href={`/games/${game.id}/`} class="cover-link">
+    <Image src={cover} alt="" width={720} class="cover" />
+    {index !== undefined && <span class="slot">{String(index + 1).padStart(2, '0')}</span>}
+  </a>
+  <div class="body">
+    <div class="meta">
+      <span class="chip" data-status={status}>{statusLabel[status]}</span>
+      <span class="engine">{engine}{engineVersion && ` ${engineVersion}`}</span>
+    </div>
+    <h3><a href={`/games/${game.id}/`}>{title}</a></h3>
+    <p class="muted">{tagline}</p>
+    {
+      genres.length > 0 && (
+        <ul class="tags">
+          {genres.map((g) => (
+            <li>{g}</li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .card {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .card:hover {
+    border-color: var(--accent-dim);
+    transform: translateY(-3px);
+  }
+  .cover-link {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+  .cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .card:hover .cover {
+    transform: scale(1.04);
+  }
+  .slot {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: rgb(255 255 255 / 0.85);
+    text-shadow: 0 2px 12px rgb(0 0 0 / 0.8);
+  }
+  .body {
+    padding: 1.25rem 1.5rem 1.5rem;
+  }
+  .meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .engine {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-faint);
+  }
+  h3 {
+    margin-bottom: 0.3em;
+  }
+  h3 a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  h3 a::after {
+    /* make the whole card clickable without nesting links */
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  p {
+    margin: 0 0 1rem;
+  }
+</style>

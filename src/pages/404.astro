@@ -1,0 +1,43 @@
+---
+import Base from '@/layouts/Base.astro';
+---
+
+<Base title="404" description="Page not found.">
+  <section class="section">
+    <div class="wrap over">
+      <p class="hud-label">Error 404</p>
+      <h1>Game over</h1>
+      <p class="muted">This level doesn't exist. It may have been cut in a later build.</p>
+      <p class="continue">Continue? <span class="blink">_</span></p>
+      <div class="cta">
+        <a class="btn" href="/">Yes: main menu</a>
+        <a class="btn btn-ghost" href="/games/">Select a game</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .over {
+    text-align: center;
+    padding-block: 4rem;
+  }
+  h1 {
+    font-size: clamp(3rem, 12vw, 6rem);
+    color: var(--danger);
+    text-shadow: 0 0 30px rgb(255 93 108 / 0.35);
+  }
+  .continue {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 2rem;
+  }
+  .cta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>

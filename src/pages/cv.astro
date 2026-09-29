@@ -1,0 +1,217 @@
+---
+import Base from '@/layouts/Base.astro';
+import { cv } from '@/data/cv';
+import { site } from '@/data/site';
+import { getGames, statusLabel } from '@/lib/content';
+
+const games = await getGames();
+const contact = [site.email, site.links.github, site.links.linkedin].filter(Boolean);
+---
+
+<Base title="CV" description={`CV of ${site.name}, ${site.title}.`}>
+  <section class="section">
+    <div class="wrap cv">
+      <header class="head">
+        <div>
+          <p class="hud-label no-print">Stats screen</p>
+          <h1>{site.name}</h1>
+          <p class="role">{site.title} · {site.class}</p>
+          {contact.length > 0 && <p class="muted contact">{contact.join('  ·  ')}</p>}
+        </div>
+        <button class="btn no-print" type="button" onclick="window.print()">Save as PDF</button>
+      </header>
+
+      <p class="summary">{cv.summary}</p>
+
+      <div class="cols">
+        <div>
+          <h2>Experience</h2>
+          {
+            cv.experience.map((job) => (
+              <div class="entry">
+                <div class="entry-head">
+                  <h3>{job.role}</h3>
+                  <span class="period">{job.period}</span>
+                </div>
+                <p class="org muted">{job.org}</p>
+                <ul>
+                  {job.points.map((p) => (
+                    <li>{p}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+
+          <h2>Game projects</h2>
+          {
+            games.map((g) => (
+              <div class="entry">
+                <div class="entry-head">
+                  <h3>
+                    <a href={`/games/${g.id}/`}>{g.data.title}</a>
+                  </h3>
+                  <span class="period">{statusLabel[g.data.status]}</span>
+                </div>
+                <p class="org muted">
+                  {g.data.role} · {g.data.engine} {g.data.engineVersion} ·{g.data.teamSize === 1 ? 'Solo' : `Team of ${g.data.teamSize}`}
+                </p>
+                <p>{g.data.description}</p>
+              </div>
+            ))
+          }
+        </div>
+
+        <aside>
+          <h2>Skills</h2>
+          {
+            cv.skills.map((s) => (
+              <div class="skill">
+                <p class="hud-label">{s.group}</p>
+                <ul class="tags">
+                  {s.items.map((i) => (
+                    <li>{i}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+
+          <h2>Education</h2>
+          {
+            cv.education.map((e) => (
+              <div class="entry">
+                <h3>{e.title}</h3>
+                <p class="org muted">
+                  {e.org} · {e.period}
+                </p>
+              </div>
+            ))
+          }
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1.5rem;
+  }
+  .role {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--accent);
+    margin: 0;
+  }
+  .contact {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+  .summary {
+    font-size: 1.15rem;
+    max-width: 70ch;
+    margin-block: 2rem;
+  }
+  .cols {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 3rem;
+  }
+  h2 {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.4rem;
+    margin-top: 2rem;
+  }
+  .entry {
+    margin-bottom: 1.5rem;
+    break-inside: avoid;
+  }
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .entry h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  .entry h3 a {
+    color: inherit;
+  }
+  .period {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+  .org {
+    margin: 0.1rem 0 0.4rem;
+    font-size: 0.95rem;
+  }
+  .entry ul {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+  .skill {
+    margin-bottom: 1rem;
+  }
+  .skill .hud-label {
+    margin-bottom: 0.4rem;
+  }
+  @media (max-width: 820px) {
+    .cols {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Clean, ink-friendly one-pager when saved as PDF */
+  @media print {
+    .section {
+      padding: 0;
+    }
+    h1,
+    h2,
+    h3,
+    .role,
+    .entry h3 a {
+      color: #000;
+    }
+    .muted,
+    .period,
+    .org,
+    .contact {
+      color: #444;
+    }
+    h2,
+    .head {
+      border-color: #bbb;
+    }
+    .tags li {
+      background: none;
+      color: #000;
+      border-color: #bbb;
+    }
+    .skill .hud-label {
+      color: #000;
+    }
+    .skill .hud-label::before {
+      content: none;
+    }
+    .cols {
+      grid-template-columns: 1.7fr 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

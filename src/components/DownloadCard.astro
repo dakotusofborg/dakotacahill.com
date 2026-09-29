@@ -1,0 +1,102 @@
+---
+import type { Game } from '@/lib/content';
+
+interface Props {
+  game: Game;
+}
+
+const { download, links, title } = Astro.props.game.data;
+
+const hostLabel = { github: 'GitHub Releases', r2: 'Direct download', itch: 'itch.io' } as const;
+const size = download
+  ? download.sizeMB >= 1024
+    ? `${(download.sizeMB / 1024).toFixed(1)} GB`
+    : `${download.sizeMB} MB`
+  : '';
+---
+
+<aside class="panel dl" aria-label={`Get ${title}`}>
+  <p class="hud-label">Loadout</p>
+
+  {
+    download ? (
+      <>
+        <dl class="stats">
+          <dt>Build</dt>
+          <dd>v{download.version}</dd>
+          <dt>Platform</dt>
+          <dd>{download.platform}</dd>
+          <dt>Size</dt>
+          <dd>{size}</dd>
+          <dt>Via</dt>
+          <dd>{hostLabel[download.host]}</dd>
+        </dl>
+        <a class="btn btn-warn play" href={download.url} rel="noopener">
+          ▼ Download build
+        </a>
+        {download.notes && <p class="note muted">{download.notes}</p>}
+      </>
+    ) : (
+      <p class="muted">No public build yet. Check back soon.</p>
+    )
+  }
+
+  <div class="links">
+    {
+      links.source && (
+        <a class="btn btn-ghost" href={links.source} target="_blank" rel="noopener">
+          Source code
+        </a>
+      )
+    }
+    {
+      links.projectFiles && (
+        <a class="btn btn-ghost" href={links.projectFiles} target="_blank" rel="noopener">
+          Project files
+        </a>
+      )
+    }
+    {
+      links.itch && (
+        <a class="btn btn-ghost" href={links.itch} target="_blank" rel="noopener">
+          itch.io
+        </a>
+      )
+    }
+    {
+      links.steam && (
+        <a class="btn btn-ghost" href={links.steam} target="_blank" rel="noopener">
+          Steam
+        </a>
+      )
+    }
+  </div>
+</aside>
+
+<style>
+  .dl {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .play {
+    justify-content: center;
+    font-size: 1.05rem;
+    padding-block: 1em;
+  }
+  .note {
+    font-size: 0.85rem;
+    margin: -0.5rem 0 0;
+  }
+  .links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .links:empty {
+    display: none;
+  }
+  .links .btn {
+    justify-content: center;
+  }
+</style>

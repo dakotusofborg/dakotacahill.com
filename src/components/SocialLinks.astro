@@ -1,0 +1,38 @@
+---
+import { site } from '@/data/site';
+
+const entries = [
+  { label: 'GitHub', href: site.links.github },
+  { label: 'itch.io', href: site.links.itch },
+  { label: 'LinkedIn', href: site.links.linkedin },
+  { label: 'YouTube', href: site.links.youtube },
+  { label: 'Email', href: site.email ? `mailto:${site.email}` : '' },
+].filter((e) => e.href);
+---
+
+{
+  entries.length > 0 && (
+    <ul class="social">
+      {entries.map((e) => (
+        <li>
+          <a href={e.href} rel="me noopener" target={e.href.startsWith('mailto:') ? undefined : '_blank'}>
+            {e.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+</style>
