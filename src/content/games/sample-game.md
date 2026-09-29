@@ -9,7 +9,7 @@ status: prototype # released | in-development | prototype | game-jam
 releaseDate: 2026-09-01
 featured: true
 showOnCV: false # sample content: never list on the real CV
-order: 1
+order: 2
 
 engine: Unreal Engine
 engineVersion: '5.6'

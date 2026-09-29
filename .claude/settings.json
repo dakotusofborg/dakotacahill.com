@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/workspace/ObstacleAssault/**)",
+      "Read(//c/workspace/ObstacleAssault/Source/ObstacleAssault/**)"
+    ]
+  }
+}

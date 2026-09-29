@@ -9,7 +9,9 @@ const games = defineCollection({
       title: z.string(),
       tagline: z.string(),
       description: z.string(), // used for SEO + cards
-      status: z.enum(['released', 'in-development', 'prototype', 'game-jam']),
+      status: z.enum(['released', 'in-development', 'prototype', 'game-jam', 'course-project']),
+      // Credit for course/tutorial-based projects, e.g. { name: 'GameDev.tv', url: '…' }
+      credit: z.object({ name: z.string(), url: z.url().optional() }).optional(),
       releaseDate: z.coerce.date().optional(),
       featured: z.boolean().default(false),
       showOnCV: z.boolean().default(true), // false keeps a game off the CV page

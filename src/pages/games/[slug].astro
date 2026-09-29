@@ -26,6 +26,13 @@ const devlog = (await getPosts()).filter((p) => p.data.game?.id === game.id);
       <p class="hud-label"><a href="/games/">Games</a> / {d.title}</p>
       <h1>{d.title}</h1>
       <p class="tagline">{d.tagline}</p>
+      {
+        d.credit && (
+          <p class="credit">
+            Built following the {d.credit.url ? <a href={d.credit.url}>{d.credit.name}</a> : d.credit.name} course.
+          </p>
+        )
+      }
       <div class="chips">
         <span class="chip" data-status={d.status}>{statusLabel[d.status]}</span>
         {d.releaseDate && <span class="chip">{formatDate(d.releaseDate)}</span>}
@@ -190,6 +197,11 @@ const devlog = (await getPosts()).filter((p) => p.data.game?.id === game.id);
     font-size: 1.25rem;
     color: var(--text-dim);
     max-width: 50ch;
+  }
+  .credit {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    margin-top: -0.5rem;
   }
   .chips {
     display: flex;

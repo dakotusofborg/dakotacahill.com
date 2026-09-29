@@ -28,4 +28,5 @@ export const statusLabel: Record<Game['data']['status'], string> = {
   'in-development': 'In Development',
   prototype: 'Prototype',
   'game-jam': 'Game Jam',
+  'course-project': 'Course Project',
 };

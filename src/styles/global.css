@@ -294,7 +294,8 @@ pre {
   color: var(--warn);
 }
 .chip[data-status='prototype'],
-.chip[data-status='game-jam'] {
+.chip[data-status='game-jam'],
+.chip[data-status='course-project'] {
   color: var(--accent);
 }
 
