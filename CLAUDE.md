@@ -2,7 +2,7 @@
 
 Static Astro 7 site: games (primary), devlog/blog, CV, workflow page, about/contact.
 Game-UI visual style (HUD panels, clipped corners, menu-caret nav). Dark-only by design.
-Domain placeholder: `https://dakotacahill.com` (set in `astro.config.mjs`).
+Live at `https://dakotacahill.com` (set in `astro.config.mjs`).
 
 ## Commands
 
@@ -32,10 +32,28 @@ Domain placeholder: `https://dakotacahill.com` (set in `astro.config.mjs`).
 
 ## Adding a game
 
-1. Copy `src/content/games/sample-game.md` → `src/content/games/<slug>.md`
-2. Put key art + screenshots in `src/assets/games/<slug>/` (16:9, ≥1600px wide)
-3. Publish the packaged build as a GitHub Release, then set `download.url`, `version`, `sizeMB`
-4. `npm run build` to validate
+Games are Unreal Engine 5 C++ projects in `C:\workspace\<Project>`, each with its own GitHub repo. Reference: `obstacle-assault.md`.
+
+1. **Survey the project honestly.** Read its README and `Source/`. Only claim code the owner wrote: UE templates add
+   Epic code (e.g. `Variant_*` folders). Course or tutorial projects get `status: course-project` plus a `credit`.
+2. **Check third-party assets.** Fab and Marketplace packs under the Standard License must not be in a public repo.
+   Gitignore them and list them in the project README with install steps. Shipping them inside a packaged build is fine.
+3. **Package** (editor closed; the first Shipping build takes about 20–60 min):
+   `& "C:\Program Files\Epic Games\UE_5.6\Engine\Build\BatchFiles\RunUAT.bat" BuildCookRun -project=<uproject> -noP4 -platform=Win64 -clientconfig=Shipping -build -cook -map=<GameDefaultMap> -stage -pak -compressed -prereqs -archive -archivedirectory=<proj>\Packaged\vX.Y.Z -nocompileeditor -utf8output`.
+   Get `GameDefaultMap` from `Config/DefaultEngine.ini`. `-map` keeps asset-pack demo maps out of the build. `Packaged/` must be gitignored.
+4. **Smoke test and screenshots:** `scripts/capture-screenshots.ps1` launches the build, captures frames, and closes it.
+   Put the images in `src/assets/games/<slug>/` (cover plus screenshots, 16:9). The owner may swap in cleaner shots.
+5. **Zip** the archived `Windows/` folder, minus `Manifest_*.txt`, as `<Game>-vX.Y.Z-Win64.zip`. Use `tar.exe -a -c -f`; the limit is 2 GB.
+6. **Release:** `scripts/release-game.ps1 -Repo dakotusofborg/<Repo> -Tag vX.Y.Z -Branch <default branch> -Zip … -NotesFile …`.
+   Check the repo's default branch first (ObstacleAssault uses `master`).
+7. **Site entry:** `src/content/games/<slug>.md` with `download.url` pointing at the versioned release asset, `version`, and `sizeMB`.
+8. **Verify, then deploy:** `curl -sIL` the download URL (expect 200 and the full Content-Length) *before* deploying, so the
+   button is never dead. Then `npm run build && npx wrangler deploy`, and check the live page.
+
+## Updating a game
+
+Repackage (step 3) into `Packaged\vX.Y.Z`, release a new tag (steps 5–6), then update `download.url`, `version`, `sizeMB`
+and the "What's next" section in the game's `.md`. Rebuild and deploy (step 8). Optionally add a devlog post with `game: <slug>`.
 
 ## Deploy
 
