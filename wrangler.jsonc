@@ -1,0 +1,12 @@
+// Cloudflare Workers config: serves the static Astro build from dist/.
+// Workers Builds runs `npm run build`, then `npx wrangler deploy`.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dakotacahill",
+  "compatibility_date": "2026-09-29",
+  "assets": {
+    "directory": "./dist",
+    // Astro emits dist/404.html; serve it with a 404 status for unknown URLs.
+    "not_found_handling": "404-page"
+  }
+}
