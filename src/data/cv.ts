@@ -24,12 +24,12 @@ export const cv = {
       ],
     },
     {
-      role: 'Technical Support Engineer',
+      role: 'Infrastructure Engineer',
       org: 'Petersen Games',
       location: 'New York, NY',
       period: 'Aug 2025 – Present',
       points: [
-        'Support a tabletop and digital game publisher, resolving 100+ tickets weekly at 95% SLA (<24h) with the help of custom API integrations',
+        'Run infrastructure and support operations for a tabletop and digital game publisher, sustaining 95% SLA (<24h) across 100+ weekly tickets through custom API integrations',
         'Developed backend Liquid templates for the Shopify storefront, reducing render errors by 60%',
         'Integrated ML-based ticket classification in Freshdesk to auto-route issues, cutting initial triage time by 40%',
         'Partner with engineering on backend issues for globally distributed gaming products',
